@@ -1,0 +1,3 @@
+module ShitDB
+  # Your code goes here...
+end
