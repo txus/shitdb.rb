@@ -1,3 +1,5 @@
+require_relative 'shitdb/db'
+require_relative 'shitdb/collection'
+
 module ShitDB
-  # Your code goes here...
 end

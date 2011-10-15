@@ -2,3 +2,5 @@
 .bundle
 Gemfile.lock
 pkg/*
+.rbx
+lib/shitdb/my_db
