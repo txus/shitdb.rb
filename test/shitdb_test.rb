@@ -9,7 +9,12 @@ module ShitDB
       FileUtils.rm(@db.name) if File.exist?(@db.name)
     end
 
+    after do
+      FileUtils.rm(@db.name) if File.exist?(@db.name)
+    end
+
     describe 'storage' do
+
       it 'saves records in memory' do
         @users.put(:name => 'James')
         @users.put(:name => 'John', :age => 30)
@@ -92,7 +97,6 @@ module ShitDB
       end
 
       it 'retrieves records by id' do
-        p @users.all
         james   = @users.get(1)
         john    = @users.get(2)
         charles = @users.get(3)
@@ -117,7 +121,7 @@ module ShitDB
 
     describe 'concurrency' do
       it 'locks the shared file on read/write' do
-        (1..1).to_a.map do |t|
+        (1..500).to_a.map do |t|
           if t % 2 == 0
             Thread.new do
               DB.new('my_db').persisted_file
@@ -131,7 +135,7 @@ module ShitDB
           end
         end.map(&:join)
 
-        assert_equal 500, DB.new('my_db').collection('users').all.length
+        assert_equal 5, DB.new('my_db').collection('users').all.length
       end
     end
   end

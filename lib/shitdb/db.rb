@@ -21,13 +21,9 @@ module ShitDB
       if File.exist?(@name)
         to_read = ""
         while to_read == ""
-          f = File.open(@name, 'r+')
-          # f.flock(File::LOCK_EX | File::LOCK_NB)
-          to_read = f.read
-          # to_read = f.read_nonblock(10)
-          # puts to_read.inspect
-          # f.flock(File::LOCK_UN)
-          f.close
+          File.open(@name, 'r+') do |f|
+            to_read = f.read
+          end
         end
 
         YAML.load(to_read)
@@ -44,17 +40,9 @@ module ShitDB
 
       result = nil
       begin
-        f = File.open(@name, 'w')
-        # f.flock(File::LOCK_EX | File::LOCK_NB)
-        puts "writing #{to_write}"
-        f.write to_write
-        # result = f.write_nonblock(to_write)
-      # rescue IO::WaitWritable, Errno::EINTR
-      #   IO.select(nil, [f])
-      #   retry
-      # ensure
-        # f.flock(File::LOCK_UN)
-        f.close
+        File.open(@name, 'w') do |f|
+          f.write to_write
+        end
       end
       result
     end
